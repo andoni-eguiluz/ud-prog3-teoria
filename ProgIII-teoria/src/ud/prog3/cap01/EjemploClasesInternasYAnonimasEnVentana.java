@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.Random;
 
 
-//Opción 1: clase externa
+//Opción  1: clase externa
 
 class EscuchadorBotonVentanaHilos1 implements ActionListener
 {
