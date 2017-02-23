@@ -12,6 +12,8 @@ public class EjemploLogger {
 	
 	public static void main(String argv[]) {
 		logger.setLevel( Level.ALL );  // Cambiando esto se loggean más o menos mensajes
+		// Por defecto el logger tiene un logger "padre" que 
+		//    envía los mensajes a System.err con un level INFO (loggea INFO o superiores)
 		// logger.addHandler( consoleHandler );
 		try {
 			// Al logger se le pueden añadir gestores (handler) que además
