@@ -1,7 +1,9 @@
 package ud.prog3.cap02;
 
 public class EjemploConflictoGit {
-
+	
+	// Comentario aquí
+	
 	public static void main(String[] args) {
 		metodoDePrueba();
 	}
@@ -9,7 +11,8 @@ public class EjemploConflictoGit {
 	private static void metodoDePrueba() {
 		System.out.println( "Inicio" );
 		for (int i=0; i<5; i++) {
-			System.out.println( "Valor " + i );
+			int j = i*2;
+			System.out.println( "Valor " + j );
 			//
 		}
 		System.out.println( "Final" );
