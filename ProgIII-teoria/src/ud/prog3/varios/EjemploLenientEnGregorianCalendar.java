@@ -14,7 +14,8 @@ public class EjemploLenientEnGregorianCalendar {
         int mes = 1;
         int anyo = 2017;
         gc.set( anyo, mes, dia );
-        System.out.println( df.format( gc.getTime() ) );  // Erróneo pero se reinterpreta (32 de febrero = 4 de marzo)
+        gc.setLenient( true );   // Lenient es lo que define que se interprete 32 de febrero como correcto o como erróneo
+        System.out.println( df.format( gc.getTime() ) );  // Erróneo pero se reinterpreta (32 de febrero = 4 de marzo)   (lenient = true)
         gc.setLenient( false );
         gc.set( anyo, mes, dia );
         try {
