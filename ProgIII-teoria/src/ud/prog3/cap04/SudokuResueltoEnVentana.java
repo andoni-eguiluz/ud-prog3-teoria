@@ -22,15 +22,30 @@ public class SudokuResueltoEnVentana {
 	private static VisualizaProceso visual;
 	private static Sudoku sudoku;
 	public static void main(String[] args) {
+		int opcion = 2;  // 1 = Aleatorio   2 = Manual
 		visualiza();
 		sudoku = new Sudoku();
 		visual.ponMensaje( "Creando sudoku aleatorio...");
-		sudoku.creaRandom();
+		if (opcion==1) sudoku.creaRandom();
+		else if (opcion==2)
+			sudoku.creaSudokuManual( new int[][] {
+				{ 0, 5, 0  , 3, 9, 0,   0, 8, 0},
+				{ 0, 4, 7  , 0, 0, 0,   3, 0, 0},
+				{ 0, 0, 0  , 0, 0, 7,   0, 0, 5},
+				
+				{ 0, 0, 1  , 0, 0, 0,   0, 0, 0},
+				{ 0, 0, 4  , 7, 0, 5,   6, 0, 0},
+				{ 0, 0, 0  , 0, 0, 0,   8, 0, 0},
+				
+				{ 7, 0, 0  , 8, 0, 0,   0, 0, 0},
+				{ 0, 0, 6  , 0, 0, 0,   5, 2, 0},
+				{ 0, 8, 0  , 0, 2, 9,   0, 1, 0}
+			});
 		visual.setRunningMode( 0 );
 		visual.ponMensaje( "Sudoku creado.");
 		visual.hazPausa();
 		visual.ponMensaje( "Ocultando casillas...");
-		sudoku.ocultaRandom( 21 );
+		if (opcion==1) sudoku.ocultaRandom( 27 );
 		visual.setRunningMode( 0 );
 		visual.ponMensaje( "Casillas ocultadas.");
 		visual.hazPausa();
@@ -84,13 +99,34 @@ public class SudokuResueltoEnVentana {
 
 	
 	private static class Sudoku {
-		protected int[][] valor; // Sudoku solucionado
+		protected int[][] valor; // Sudoku solucionado  (0 = no solucionado)
 		protected int[][] marca; // 0 = valor mostrado | -1 = oculto | 1 a 9 = puesto por el usuario o por el solucionador
 		/** Crea un Sudoku vacío
 		 */
 		public Sudoku() {
 			valor = new int[9][9];
 			marca = new int[9][9];
+		}
+		
+		/** Crea un Sudoku introduciendo los valores a mano
+		 * @param valores	Array de 9x9 valores de 1 a 9 (0 si el valor es oculto)
+		 */
+		public void creaSudokuManual( int[][] valores ) {
+			for (int col=0; col<9; col++) { for (int fila=0; fila<9; fila++) {
+				valor[fila][col] = 0;   // Valor sin solucionar
+				marca[fila][col] = -1;  // Ocultar todas
+			} }
+			for (int fila=0; fila<valores.length; fila++) {
+				for (int col=0; col<valores[0].length; col++) {
+					if (valores[fila][col] == 0) {
+						valor[fila][col] = 0;
+						marca[fila][col] = -1;
+					} else if (valores[fila][col] >= 1 && valores[fila][col] <= 9) {
+						valor[fila][col] = valores[fila][col];
+						marca[fila][col] = 0;
+					}
+				}
+			}
 		}
 		/** Crea un Sudoku aleatorio visualizando n números aleatorios
 		 * (ojo: el sudoku es correcto, pero puede ser que sea imposible de solucionar si se visualizan muy pocos números)
@@ -162,7 +198,8 @@ public class SudokuResueltoEnVentana {
 				numerosQueHay = new boolean[10];  // Inicializa a 10 falses (el 0 no se usa)
 				for (int col=0; col<9; col++) {
 					int val = valor[fila][col];
-					if (marca[fila][col]>0) val = marca[fila][col];
+					if (marca[fila][col]==-1) val = 0;
+					else if (marca[fila][col]>0) val = marca[fila][col];
 					if (val>0) {
 						if (numerosQueHay[val]) return false;
 						numerosQueHay[val] = true;
@@ -174,7 +211,8 @@ public class SudokuResueltoEnVentana {
 				numerosQueHay = new boolean[10];  // Inicializa a 10 falses (el 0 no se usa)
 				for (int fila=0; fila<9; fila++) {
 					int val = valor[fila][col];
-					if (marca[fila][col]>0) val = marca[fila][col];
+					if (marca[fila][col]==-1) val = 0;
+					else if (marca[fila][col]>0) val = marca[fila][col];
 					if (val>0) {
 						if (numerosQueHay[val]) return false;
 						numerosQueHay[val] = true;
@@ -187,8 +225,9 @@ public class SudokuResueltoEnVentana {
 					numerosQueHay = new boolean[10];  // Inicializa a 10 falses (el 0 no se usa)
 					for (int col=0; col<3; col++) {
 						for (int fila=0; fila<3; fila++) {
-							int val = valor[fila][col];
-							if (marca[fila][col]>0) val = marca[fila][col];
+							int val = valor[fI+fila][cI+col];
+							if (marca[fI+fila][cI+col]==-1) val = 0;
+							else if (marca[fI+fila][cI+col]>0) val = marca[fI+fila][cI+col];
 							if (val>0) {
 								if (numerosQueHay[val]) return false;
 								numerosQueHay[val] = true;
