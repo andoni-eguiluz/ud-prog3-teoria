@@ -40,16 +40,16 @@ public class VisualizaProceso {
 				pLineaCent.add( tfTiempoPausas );
 				pLineaCent.add( new JLabel( "(msegs.)" ) );
 			pSupCent.add( pLineaCent );
-				bSimular = new JButton(); bSimular.setIcon( new ImageIcon( ud.prog3.cap04.AquilesYLaTortuga.class.getResource( "img/Button Play.png" ) ) );
+				bSimular = new JButton(); bSimular.setIcon( new ImageIcon( VisualizaProceso.class.getResource( "img/Button Play.png" ) ) );
 			pSupCent.add( bSimular );
 				JLabel l2 = new JLabel( "Paso a paso", JLabel.CENTER );
 				JPanel p2 = new JPanel();
 				p2.setBorder( BorderFactory.createLineBorder( Color.blue, 1 ));
 				p2.add(l2);
 			pSupDer.add( p2 );
-				bStop = new JButton(); bStop.setIcon( new ImageIcon( ud.prog3.cap04.AquilesYLaTortuga.class.getResource( "img/Button Stop.png" ) ) );
+				bStop = new JButton(); bStop.setIcon( new ImageIcon( VisualizaProceso.class.getResource( "img/Button Stop.png" ) ) );
 				pLineaDer.add( bStop );
-				bPlay = new JButton(); bPlay.setIcon( new ImageIcon( ud.prog3.cap04.AquilesYLaTortuga.class.getResource( "img/Button Play Pause.png" ) ) );
+				bPlay = new JButton(); bPlay.setIcon( new ImageIcon( VisualizaProceso.class.getResource( "img/Button Play Pause.png" ) ) );
 				pLineaDer.add( bPlay );
 			pSupDer.add( pLineaDer );
 			pSup.add( pSupIzq, BorderLayout.CENTER );
@@ -105,16 +105,16 @@ public class VisualizaProceso {
 			bSimular.addActionListener( (e) -> {
 				if (running==0) {
 					running = 1;
-					bSimular.setIcon( new ImageIcon( ud.prog3.cap04.AquilesYLaTortuga.class.getResource( "img/Button Pause.png" ) ) );
+					bSimular.setIcon( new ImageIcon( VisualizaProceso.class.getResource( "img/Button Pause.png" ) ) );
 				} else {
 					running = 0;
-					bSimular.setIcon( new ImageIcon( ud.prog3.cap04.AquilesYLaTortuga.class.getResource( "img/Button Play.png" ) ) );
+					bSimular.setIcon( new ImageIcon( VisualizaProceso.class.getResource( "img/Button Play.png" ) ) );
 				}
 			} );
 			bStop.addActionListener( (e) -> {
 				if (parada!=null) parada.run();
 				if (running==1) // Si estaba ejecutándose se pone el icono de play de nuevo
-					bSimular.setIcon( new ImageIcon( ud.prog3.cap04.AquilesYLaTortuga.class.getResource( "img/Button Play.png" ) ) );
+					bSimular.setIcon( new ImageIcon( VisualizaProceso.class.getResource( "img/Button Play.png" ) ) );
 				running = 0;
 				if (repintar!=null) repintar.run();
 			} );
@@ -239,14 +239,14 @@ public class VisualizaProceso {
 	 * @param mode	0 para parada, 1 para ejecución continua, 2 para paso a paso
 	 */
 	public void setRunningMode( int mode ) {
-		if (running==1) miVentana.bSimular.setIcon( new ImageIcon( ud.prog3.cap04.AquilesYLaTortuga.class.getResource( "img/Button Play.png" ) ) );
+		if (running==1) miVentana.bSimular.setIcon( new ImageIcon( VisualizaProceso.class.getResource( "img/Button Play.png" ) ) );
 		running = 0;
 	}
 	
 	/** Hace un stop programático del proceso
 	 */
 	public void stop() {
-		if (running==1) miVentana.bSimular.setIcon( new ImageIcon( ud.prog3.cap04.AquilesYLaTortuga.class.getResource( "img/Button Play.png" ) ) );
+		if (running==1) miVentana.bSimular.setIcon( new ImageIcon( VisualizaProceso.class.getResource( "img/Button Play.png" ) ) );
 		running = 0;
 	}
 	
