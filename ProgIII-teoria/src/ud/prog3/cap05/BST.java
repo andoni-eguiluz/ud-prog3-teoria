@@ -37,6 +37,25 @@ public class BST<T extends Comparable<T>> {
 			}
 		}
 		
+	/** Busca un elemento en el árbol
+	 * @param aBuscar	Elemento a buscar
+	 * @return	true si está, false en caso contrario
+	 */
+	public boolean contains( T aBuscar ) {
+		return contains( raiz, aBuscar );
+	}
+		private boolean contains( NodoBST<T> nodo, T aBuscar ) {
+			if (nodo==null) {
+				return false;
+			} else if (nodo.elemento.compareTo( aBuscar ) == 0) {
+				return true;
+			} else if (nodo.elemento.compareTo( aBuscar ) < 0) {
+				return contains( nodo.derecho, aBuscar ); 
+			} else {
+				return contains( nodo.izquierdo, aBuscar );
+			}
+		}
+	
 	public void recorrerInOrden( Consumer<T> c ) {
 		recorrerIOrec( raiz, c );
 	}
