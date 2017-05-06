@@ -304,6 +304,23 @@ public class PruebasVariasSwing {
 		});
 	}
 	
+	
+	private static void pruebaJOptionPaneConComponentesPersonalizados() {
+		Object[] varios = new Object[4];
+		varios[0] = "Un string (label)";
+		varios[1] = new JTextField( "Un textfield" );
+		varios[2] = new JButton( "Un botón con evento" );
+		((JButton)varios[2]).addActionListener( new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println( "Pulsado");
+			}
+		});
+		varios[3] = new JScrollPane( new JTextArea( "Un textarea con scrollpane                     \n\n\n\n\n", 4, 10 ) );
+		JOptionPane.showConfirmDialog( null, varios, "Mensajes variopintos", JOptionPane.YES_NO_CANCEL_OPTION );
+		System.out.println( ((JTextField)varios[1]).getText() );
+	}
+	
 	public static void main( String[] s ) {
 		JFrame vP = new JFrame();
 		vP.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
@@ -335,6 +352,9 @@ public class PruebasVariasSwing {
 		p.add( b = new JButton( "textfield con entrada limitada") );
 			// Prueba de text field con entrada limitada
 			b.addActionListener( (e) -> { pruebaLimitarJTextField(); } );
+		p.add( b = new JButton( "JOptionPane con componentes personalizados") );
+			// Prueba de JOptionPane personalizado
+			b.addActionListener( (e) -> { pruebaJOptionPaneConComponentesPersonalizados(); } );
 		vP.pack();
 		vP.setVisible( true );
 	}
