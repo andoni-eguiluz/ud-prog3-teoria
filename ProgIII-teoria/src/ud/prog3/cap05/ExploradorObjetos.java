@@ -1,5 +1,6 @@
 package ud.prog3.cap05;
 
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -28,6 +29,8 @@ public class ExploradorObjetos {
 	private static int NUM_MAX_ITERATIVIDAD = 10000000;  // Número de recorrido iterativo máximo que se permite - más se truncan (ni se visualizan ni se computan)
 	private static int NUM_MAX_SEPRS = 10; // Número de llamadas recursivas que se visualizan con separador - más se mantiene la separación y se indica "...(n) " al principio
 	private static int NUM_REC_COINC = 8;  // Número de llamadas recursivas coincidentes en atributo y espacio para hacer iteratividad
+	private static int NUM_MAX_DATO_ARRAY = 16;  // Número máximo de valores de array que se muestra en valor de atributo
+	private static boolean ANYADIR_ATRIBUTOS_HEREDADOS = true;  // true para añadir atributos heredados al desglosar cada clase, false solo atributos propios
 	private static int TAM_REF_EN_BYTES = 4;
 	private static HashMap<String, Integer> TAM_EN_BYTES;
 	static {
@@ -113,6 +116,20 @@ public class ExploradorObjetos {
 	/** Devuelve un despliegue de los atributos (y sus valores, y sus tamaños en memoria) de un objeto,
 	 * introduciéndolos en un modelo de datos de árbol, visualizable en un JTree.
 	 * @param o	Objeto que se quiere analizar (diferente de null)
+	 * @param atributosAVer	Lista de atributos que se quieren visualizar, incluidos en un string
+	 * @return	Tamaño en bytes del objeto
+	 */
+	public static DefaultTreeModel atributosYValoresToTree(Object o, String atributosAVer ) {
+		raiz = new DefaultMutableTreeNode( o.toString() );
+		DefaultTreeModel arbol = new DefaultTreeModel( raiz );
+		atributosYValoresToString( "", o, false, false, atributosAVer );
+		raiz = null;
+		return arbol;
+	}
+	
+	/** Devuelve un despliegue de los atributos (y sus valores, y sus tamaños en memoria) de un objeto,
+	 * introduciéndolos en un modelo de datos de árbol, visualizable en un JTree.
+	 * @param o	Objeto que se quiere analizar (diferente de null)
 	 * @return	Tamaño en bytes del objeto
 	 */
 	public static DefaultTreeModel atributosYValoresToTree(Object o) {
@@ -140,6 +157,19 @@ public class ExploradorObjetos {
 		}
 		Class<?> c = o.getClass();
 		Field fs[] = c.getDeclaredFields();
+		// Añadido de campos heredados
+		if (ANYADIR_ATRIBUTOS_HEREDADOS) {
+			Class<?> cParent = c.getSuperclass();
+			while (cParent!=null && !cParent.getName().equals("Object")) {
+				Field[] masAtributos = cParent.getDeclaredFields();
+				Field[] nuevoArray = new Field[fs.length + masAtributos.length];
+				System.arraycopy( fs, 0, nuevoArray, 0, fs.length);
+				System.arraycopy( masAtributos, 0, nuevoArray, fs.length, masAtributos.length);
+				fs = nuevoArray;
+				cParent = cParent.getSuperclass();
+			}
+		}
+		// Fin añadido de campos heredados
 		tamObjeto += TAM_METADATOS;
 		if (mostrarTam && !soloCalcTamanyo) {
 			if (raiz==null)
@@ -244,10 +274,11 @@ public class ExploradorObjetos {
 							} else {
 								if (camposAMostrar.equals("") || camposAMostrar.contains(f.getName()))
 									if (!soloCalcTamanyo)
-										if (raiz==null)
+										if (raiz==null) {
 											atsInstancia += (miSep + tam + f.getName() + " = " + aString(f.get( o ), f.getType()) + "\n" );
-										else
-											nodoHijo = anyadirHijoArbol( raiz,  tam + f.getName() + " = " + aString(f.get( o ), f.getType()) );
+										} else {
+											nodoHijo = anyadirHijoArbol( raiz,  tam + f.getName() + " = " + aString( f.get( o ), f.getType()) );
+										}
 								objetosYaRecorridos.add( f.get(o) );
 								int difEspacio = -1;  // Variable que sólo es != -1 si hay iteratividad en vez de recursividad (ver código subsiguiente)
 								if (numLlamadas == PUNTO_CONTROL) {
@@ -422,6 +453,7 @@ public class ExploradorObjetos {
 				for (int i=0; i<arr.length; i++) {
 					ret += arr[i];
 					if (i+1<arr.length) ret += " ";
+					if (i==NUM_MAX_DATO_ARRAY) { ret += "..."; break; }
 				}
 				ret += "]";
 			} else if (o instanceof char[]) {
@@ -430,6 +462,7 @@ public class ExploradorObjetos {
 				for (int i=0; i<arr.length; i++) {
 					ret += arr[i];
 					if (i+1<arr.length) ret += " ";
+					if (i==NUM_MAX_DATO_ARRAY) { ret += "..."; break; }
 				}
 				ret += "]";
 			} else if (o instanceof boolean[]) {
@@ -438,6 +471,7 @@ public class ExploradorObjetos {
 				for (int i=0; i<arr.length; i++) {
 					ret += arr[i];
 					if (i+1<arr.length) ret += " ";
+					if (i==NUM_MAX_DATO_ARRAY) { ret += "..."; break; }
 				}
 				ret += "]";
 			} else if (o instanceof int[]) {
@@ -446,6 +480,7 @@ public class ExploradorObjetos {
 				for (int i=0; i<arr.length; i++) {
 					ret += arr[i];
 					if (i+1<arr.length) ret += " ";
+					if (i==NUM_MAX_DATO_ARRAY) { ret += "..."; break; }
 				}
 				ret += "]";
 			} else if (o instanceof long[]) {
@@ -454,6 +489,7 @@ public class ExploradorObjetos {
 				for (int i=0; i<arr.length; i++) {
 					ret += arr[i];
 					if (i+1<arr.length) ret += " ";
+					if (i==NUM_MAX_DATO_ARRAY) { ret += "..."; break; }
 				}
 				ret += "]";
 			} else if (o instanceof float[]) {
@@ -462,6 +498,7 @@ public class ExploradorObjetos {
 				for (int i=0; i<arr.length; i++) {
 					ret += arr[i];
 					if (i+1<arr.length) ret += " ";
+					if (i==NUM_MAX_DATO_ARRAY) { ret += "..."; break; }
 				}
 				ret += "]";
 			} else if (o instanceof double[]) {
@@ -470,6 +507,7 @@ public class ExploradorObjetos {
 				for (int i=0; i<arr.length; i++) {
 					ret += arr[i];
 					if (i+1<arr.length) ret += " ";
+					if (i==NUM_MAX_DATO_ARRAY) { ret += "..."; break; }
 				}
 				ret += "]";
 			} else if (o instanceof byte[]) {
@@ -478,6 +516,7 @@ public class ExploradorObjetos {
 				for (int i=0; i<arr.length; i++) {
 					ret += arr[i];
 					if (i+1<arr.length) ret += " ";
+					if (i==NUM_MAX_DATO_ARRAY) { ret += "..."; break; }
 				}
 				ret += "]";
 			} else if (o instanceof short[]) {
@@ -486,6 +525,7 @@ public class ExploradorObjetos {
 				for (int i=0; i<arr.length; i++) {
 					ret += arr[i];
 					if (i+1<arr.length) ret += " ";
+					if (i==NUM_MAX_DATO_ARRAY) { ret += "..."; break; }
 				}
 				ret += "]";
 			} else {
@@ -501,11 +541,10 @@ public class ExploradorObjetos {
 		System.out.println( "Prueba de ejecución de clase ExploradorObjetos." );
 		System.out.println();
 		
-		String tit = "INTEGER 7\n";
 		Integer o = new Integer(7);
-		System.out.println( tit + atributosYValoresToString( "", o, true, false ) );
+		System.out.println( "INTEGER 7\n" + atributosYValoresToString( "", o, true, false ) );
 		
-		tit = "ARRAY DE ENTEROS CON 7\n";
+		String tit = "ARRAY DE ENTEROS CON 7\n";
 		int[] ar = new int[10];
 		ar[0] = 7;
 		System.out.println( tit + atributosYValoresToString( "", ar, false, true ) );
@@ -649,7 +688,3 @@ public class ExploradorObjetos {
 	}
 	
 }
-
-
-
-
